@@ -1,0 +1,5 @@
+docs/
+.claude/
+.superpowers/
+*.txt
+.editorconfig

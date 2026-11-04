@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#12171e">
+  <title>cw session</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/vendor/xterm.css">
+  <link rel="stylesheet" href="/app/style.css">
+</head>
+<body class="session">
+  <!-- Phone only (web/keybar-autohide.js): the grab handle the collapsed title bar and key bar
+       leave at the top of the page, under the browser's address bar. Tap or swipe shows both; a
+       long-press cycles the preference (auto / always / hidden). -->
+  <button class="keybar-handle" id="keybar-handle" type="button" title="Show title and key bars (hold to change)" aria-label="Show title and key bars" aria-controls="topbar keybar" aria-expanded="true" hidden><span class="chev" aria-hidden="true"></span></button>
+  <header class="topbar" id="topbar">
+    <a class="back" href="/" title="All sessions" aria-label="All sessions">&lsaquo;</a>
+    <div class="title">
+      <span class="dot" id="t-dot"></span>
+      <b id="t-name" role="button" tabindex="0" title="Tap to rename">session</b>
+      <form class="t-rename-form" id="t-rename-form" hidden>
+        <input class="t-rename" id="t-rename" type="text" name="title" enterkeyhint="done" autocomplete="off" spellcheck="false" aria-label="Session name (empty clears it)">
+        <button class="btn primary t-rename-ok" id="t-rename-ok" type="submit" title="Save name" aria-label="Save name">&#10003;</button>
+      </form>
+      <span class="idx" id="t-idx"></span>
+      <span class="badge harness" id="t-harness" hidden></span>
+      <span class="badge" id="t-badge" hidden>needs input</span>
+    </div>
+    <span class="state" id="t-state"></span>
+    <div class="tools">
+      <!-- Claude and Codex sessions, when the hub has speech (web/talk.js): hold to talk, replies are read aloud. -->
+      <button class="btn" id="talk-toggle" type="button" title="Talk mode: hold to talk, replies are read aloud" aria-label="Talk mode" aria-pressed="false" aria-controls="talk" hidden>
+        <svg class="spk" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <!-- Codex sessions only (web/focus.js): the conversation instead of the TUI. -->
+      <button class="btn" id="focus-toggle" type="button" title="Focus: show only the conversation" aria-label="Focus view" aria-pressed="false" aria-controls="focus" hidden>Focus</button>
+      <button class="btn fontbtn" id="font-dec" type="button" title="Smaller font" aria-label="Smaller font">A&minus;</button>
+      <button class="btn fontbtn" id="font-inc" type="button" title="Larger font" aria-label="Larger font">A+</button>
+      <!-- Phones only (web/keybar-autohide.js): keeps the title bar shown while the key bar auto-hides. -->
+      <button class="btn pin" id="topbar-pin" type="button" title="Pin the title bar" aria-label="Pin title bar" aria-pressed="false" hidden><span class="pin-ico" aria-hidden="true">&#128204;</span></button>
+      <button class="btn" id="keybar-toggle" type="button" title="Key bar" aria-label="Key bar" aria-pressed="false">&#9000;</button>
+      <button class="btn" id="compose-toggle" type="button" title="Compose bar" aria-label="Compose bar" aria-pressed="false">&#9998;</button>
+    </div>
+  </header>
+  <div class="term-area">
+    <main class="term-wrap" id="term-wrap"><div id="term"></div></main>
+    <!-- Focus view (web/focus.js): floats over the terminal, which keeps its size and keeps running.
+         The feed is plain text built with textContent; agent markdown never becomes HTML. -->
+    <section class="focus" id="focus" aria-label="Codex conversation" hidden>
+      <div class="focus-feed" id="focus-feed" role="log" aria-live="polite" aria-relevant="additions">
+        <div class="f-line" id="focus-head-note" hidden>Earlier activity is not shown.</div>
+        <div class="f-line" id="focus-empty" hidden></div>
+        <div class="focus-tail" id="focus-tail"><div class="f-working" id="focus-working" hidden>Codex is working&hellip;</div></div>
+      </div>
+      <div class="f-status" id="focus-status" role="status" hidden></div>
+      <div class="focus-wait" id="focus-wait" role="status" aria-live="polite" hidden>
+        <span class="focus-wait-text" id="focus-wait-text"></span>
+        <button class="btn" id="focus-term" type="button">Open terminal</button>
+      </div>
+    </section>
+    <div class="banner" id="banner" role="status" hidden>reconnecting&hellip;</div>
+    <div class="follow-note" id="follow-note" hidden>another device owns the size &middot; type here to take over</div>
+    <!-- "Key bar: auto" for 1.5 s after the preference changes (web/keybar-autohide.js). -->
+    <div class="keybar-toast" id="keybar-toast" role="status" aria-live="polite" hidden></div>
+    <!-- File drop / image paste (web/drop.js): the cue while a file is dragged over the page, and
+         the upload progress / result. Both float over the terminal, so its size never changes. -->
+    <div class="drop-zone" id="drop-zone" aria-hidden="true" hidden><span>Drop to upload &middot; the path is typed here</span></div>
+    <div class="drop-toast" id="drop-toast" role="status" aria-live="polite" hidden></div>
+    <div class="overlay" id="overlay" hidden>
+      <div class="card" role="alertdialog" aria-labelledby="ov-title">
+        <h3 id="ov-title">session exited</h3>
+        <p id="ov-text"></p>
+        <div class="actions">
+          <a class="btn" href="/">Back</a>
+          <button class="btn primary" id="ov-resume" type="button" hidden>Resume</button>
+        </div>
+        <p class="error" id="ov-error"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Talk mode bar (web/talk.js): what is happening, Stop for the spoken reply, and the hold-to-talk
+       button (hidden when dictation is off on the hub). In the page flow, so the terminal refits. -->
+  <div class="talk" id="talk" hidden>
+    <div class="talk-row">
+      <div class="talk-state" id="talk-state" role="status" aria-live="polite"></div>
+      <button class="btn" id="talk-stop" type="button" title="Stop speaking" hidden>Stop</button>
+      <button class="btn primary talk-mic" id="talk-mic" type="button" title="Hold to talk, release to send" aria-pressed="false" hidden>
+        <svg class="mic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4M8 21h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>Hold to talk</span>
+      </button>
+    </div>
+    <!-- Typed text goes to the session like a spoken utterance: a phone keyboard's dictation key (Gboard, iOS) or Win+H works here when the microphone cannot (plain-HTTP pages). -->
+    <div class="talk-row talk-type">
+      <input id="talk-text" type="text" enterkeyhint="send" autocomplete="off" autocorrect="on" autocapitalize="sentences" spellcheck="true" placeholder="Or type here, or tap your keyboard's mic" aria-label="Message to send to the session">
+      <button class="btn primary" id="talk-send" type="button">Send</button>
+    </div>
+    <!-- Shown by talk.js only when there is a choice: who listens (browser or the hub's whisper) and who speaks (hub or browser voice). -->
+    <div class="talk-row talk-opts" id="talk-opts" hidden>
+      <button class="btn" id="talk-listen" type="button" aria-pressed="false" hidden>Listen: browser</button>
+      <button class="btn" id="talk-speak" type="button" aria-pressed="false" hidden>Voice: hub</button>
+    </div>
+  </div>
+  <div class="compose" id="compose" hidden>
+    <div class="voice-status" id="voice-status" role="status" aria-live="polite" hidden></div>
+    <textarea id="compose-text" rows="1" autocorrect="on" spellcheck="true" autocapitalize="sentences" autocomplete="on" placeholder="Message (Enter sends)" title="Enter sends; Shift+Enter inserts a new line" enterkeyhint="send" aria-label="Compose message"></textarea>
+    <!-- Shown by voice.js once /api/voice says dictation is enabled. Hold on a phone, click at a desk. -->
+    <button class="btn voice" id="voice-btn" type="button" title="Dictate" aria-label="Dictate" aria-pressed="false" hidden>
+      <svg class="mic" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4M8 21h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <button class="btn primary" id="compose-send" type="button">Send</button>
+  </div>
+  <div class="pastebox" id="pastebox" hidden>
+    <textarea id="paste-text" rows="1" placeholder="Paste here (clipboard not readable)" aria-label="Paste text"></textarea>
+    <button class="btn primary" id="paste-send" type="button">Paste</button>
+    <button class="btn" id="paste-cancel" type="button" aria-label="Close paste box">&times;</button>
+  </div>
+  <!-- Snippet tray (web/snippets.js): exact text pushed by `cw copy` or an OSC 52 clipboard write,
+       one tap to copy. Hidden, so it takes no space, until the first snippet arrives. -->
+  <section class="snippets" id="snippets" aria-label="Snippets to copy" hidden>
+    <div class="snip-panel" id="snip-panel" role="list" aria-label="All snippets, newest first" hidden></div>
+    <div class="snip-row" id="snip-row"></div>
+  </section>
+  <!-- Outside the tray: a live region inside a hidden element is not announced. -->
+  <span class="sr-only" id="snip-status" role="status" aria-live="polite"></span>
+  <nav class="keybar" id="keybar" aria-label="Terminal keys" hidden>
+    <!-- Menu/prompt keys first so they fit on a phone without scrolling the bar. -->
+    <button class="btn" type="button" data-key="esc">Esc</button>
+    <button class="btn" type="button" data-key="left" aria-label="Left">&larr;</button>
+    <button class="btn" type="button" data-key="up" aria-label="Up">&uarr;</button>
+    <button class="btn" type="button" data-key="down" aria-label="Down">&darr;</button>
+    <button class="btn" type="button" data-key="right" aria-label="Right">&rarr;</button>
+    <button class="btn" type="button" data-key="enter" aria-label="Enter">&#9166;</button>
+    <span class="sep"></span>
+    <button class="btn" type="button" data-key="stab" title="Shift+Tab">&#8679;Tab</button>
+    <button class="btn" type="button" data-key="tab">Tab</button>
+    <button class="btn" type="button" data-key="ctrlc" title="Ctrl+C">^C</button>
+    <button class="btn" type="button" data-key="ctrl" title="Ctrl: next key is sent as a control character" aria-pressed="false">Ctrl</button>
+    <button class="btn" type="button" data-key="pgup" title="Page up: scrollback, or PgUp to a full-screen app">PgUp</button>
+    <button class="btn" type="button" data-key="pgdn" title="Page down: scrollback, or PgDn to a full-screen app">PgDn</button>
+    <button class="btn" type="button" data-key="copy" title="Copy terminal text (or long-press the terminal)">Copy</button>
+    <button class="btn" type="button" data-key="slash">/</button>
+    <button class="btn" type="button" data-key="paste">Paste</button>
+    <button class="btn" type="button" data-key="compose" aria-label="Compose bar">&#9998;</button>
+  </nav>
+
+  <!-- Copy overlay (web/copy.js): the terminal text in a read-only textarea where the phone's own
+       selection works. Opened by the Copy key or a long-press on the terminal. -->
+  <div class="copy-overlay" id="copy-overlay" role="dialog" aria-modal="true" aria-labelledby="copy-title" hidden>
+    <div class="copy-head">
+      <h3 id="copy-title">Copy text</h3>
+      <span class="copy-status" id="copy-status" role="status" aria-live="polite" hidden></span>
+      <button class="btn copy-x" id="copy-close" type="button" title="Close (Esc)" aria-label="Close">&times;</button>
+    </div>
+    <textarea class="copy-text" id="copy-text" readonly spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off" aria-label="Terminal text" placeholder="(the terminal is empty)"></textarea>
+    <div class="copy-actions">
+      <button class="btn primary" id="copy-all" type="button">Copy all</button>
+      <button class="btn" id="copy-sel" type="button">Copy selection</button>
+      <button class="btn" id="copy-close-2" type="button">Close</button>
+    </div>
+  </div>
+
+  <script src="/vendor/xterm.js"></script>
+  <script src="/vendor/addon-fit.js"></script>
+  <script src="/vendor/addon-web-links.js"></script>
+  <script src="/app/recent-filter.js"></script>
+  <script src="/app/harnesses.js"></script>
+  <script src="/app/session-color.js"></script>
+  <script src="/app/accent.js"></script>
+  <script src="/app/terminal-tint.js"></script>
+  <script src="/app/term-tint.js"></script>
+  <script src="/app/term.js"></script>
+  <script src="/app/touch-scroll.js"></script>
+  <script src="/app/keybar.js"></script>
+  <script src="/app/keybar-autohide.js"></script>
+  <script src="/app/copy.js"></script>
+  <script src="/app/snippets.js"></script>
+  <script src="/app/compose.js"></script>
+  <script src="/app/focus.js"></script>
+  <script src="/app/voice.js"></script>
+  <script src="/app/talk.js"></script>
+  <script src="/app/uploads.js"></script>
+  <script src="/app/drop.js"></script>
+</body>
+</html>

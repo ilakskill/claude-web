@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0b0e12">
+  <title>cw</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/app/style.css">
+</head>
+<body class="list">
+  <div class="wrap">
+    <header class="hub">
+      <a class="logo" href="/">cw<span>_</span></a>
+      <div class="health" id="health"><span class="dot" id="health-dot"></span><span id="health-text">connecting…</span></div>
+      <nav class="chips" id="chips" aria-label="Sessions"></nav>
+    </header>
+    <div class="notice warn" id="notice" hidden></div>
+
+    <div class="section-head">
+      <h2>Running <span class="count" id="running-count"></span></h2>
+      <!-- Split view (web/split.js), desk only (.split-only): pick up to 4 running sessions. -->
+      <div class="tools">
+        <span class="hidden-count split-only" id="split-hint" hidden></span>
+        <button class="btn small split-only" id="split-btn" type="button" title="Show up to 4 running sessions side by side in one tab">Split view</button>
+        <button class="btn small split-only" id="split-cancel" type="button" hidden>Cancel</button>
+      </div>
+    </div>
+    <div class="rows" id="running"><div class="empty">loading…</div></div>
+
+    <h2>New session</h2>
+    <form class="new" id="new-form" autocomplete="off">
+      <div class="grid3">
+        <label class="field" id="f-recent"><span>Recent project</span>
+          <select id="recent-select"><option value="">loading…</option></select>
+        </label>
+        <label class="field" id="f-root"><span>Browse roots</span>
+          <select id="root-select"><option value="">loading…</option></select>
+        </label>
+        <label class="field" id="f-path"><span>Path</span>
+          <input id="path-input" type="text" placeholder="C:\Dev\project" spellcheck="false" autocapitalize="off" autocorrect="off">
+        </label>
+      </div>
+      <div class="field"><span>Working directory</span>
+        <output class="resolved none" id="resolved" for="recent-select root-select path-input">pick a project, a folder, or type a path</output>
+      </div>
+      <div class="grid2">
+        <label class="field"><span>Harness</span>
+          <select id="harness-select"><option value="">loading…</option></select>
+        </label>
+        <div class="field" id="f-model"><span>Model</span>
+          <select id="model-select" aria-label="Model"><option value="">harness default</option></select>
+          <input id="model-custom" type="text" placeholder="model name" aria-label="Custom model name" spellcheck="false" autocapitalize="off" autocorrect="off" hidden>
+        </div>
+      </div>
+      <div class="grid2">
+        <label class="field"><span>Command</span>
+          <input id="command-input" type="text" value="claude" spellcheck="false" autocapitalize="off" autocorrect="off">
+        </label>
+        <label class="field"><span>Arguments (space-separated)</span>
+          <input id="args-input" type="text" placeholder="--model sonnet" spellcheck="false" autocapitalize="off" autocorrect="off">
+        </label>
+      </div>
+      <div class="form-foot">
+        <button class="btn primary" id="start-btn" type="submit">Start session</button>
+        <span class="error" id="form-error" role="alert"></span>
+      </div>
+    </form>
+
+    <div class="section-head">
+      <h2>Recent <span class="count" id="recent-count"></span></h2>
+      <div class="tools">
+        <span class="hidden-count" id="recent-hidden"></span>
+        <button class="btn small" id="show-all-btn" type="button" aria-pressed="false" hidden>Show all</button>
+        <button class="btn small danger" id="clear-recent-btn" type="button" hidden>Clear recent</button>
+      </div>
+    </div>
+    <div class="rows" id="recent"><div class="empty">loading…</div></div>
+  </div>
+  <script src="/app/recent-filter.js"></script>
+  <script src="/app/harnesses.js"></script>
+  <script src="/app/session-color.js"></script>
+  <script src="/app/accent.js"></script>
+  <script src="/app/list.js"></script>
+</body>
+</html>

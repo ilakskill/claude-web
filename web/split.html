@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#12171e">
+  <title>split · cw</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/app/style.css">
+</head>
+<body class="split">
+  <!-- Split view (web/split.js): 1-4 live sessions in one tab, /split?s=<id>,<id>. Each pane frames
+       the normal session page (/s/<id>?embed=1), so every session feature works inside it. -->
+  <header class="split-bar">
+    <a class="back" href="/" title="All sessions" aria-label="All sessions">&lsaquo;</a>
+    <b class="split-name">split</b>
+    <span class="split-count" id="split-count"></span>
+    <span class="split-status" id="split-status" role="status" aria-live="polite"></span>
+    <select class="split-add" id="split-add" aria-label="Add a session to the split">
+      <option value="">+ add session…</option>
+    </select>
+  </header>
+  <!-- Holds the #add-new form (moved here by split.js) when the header's "+ new session…" is used
+       while the free cell is not showing (1-2 panes). -->
+  <div class="split-pop" id="add-pop" role="dialog" aria-label="New session" hidden></div>
+  <main class="split-grid" id="split-grid" aria-label="Sessions">
+    <!-- Fills the free cell of a 3-pane 2x2 grid (and the page when no pane is open). -->
+    <section class="pane add-cell" id="add-cell" aria-label="Add a session" hidden>
+      <h3>Add a session</h3>
+      <div class="add-list" id="add-list"></div>
+      <form class="add-new" id="add-new" autocomplete="off">
+        <h3>New session</h3>
+        <select id="add-project" aria-label="Project"></select>
+        <input id="add-path" type="text" placeholder="or type a path" aria-label="Project path" spellcheck="false">
+        <select id="add-harness" aria-label="Harness"></select>
+        <button class="btn primary" id="add-start" type="submit">Start session</button>
+        <span class="error" id="add-error" role="alert"></span>
+      </form>
+    </section>
+    <!-- Pane dividers (split.js): positioned over the gaps, so they take no grid cell. -->
+    <div class="split-divider div-cols" id="split-col" role="separator" tabindex="0" aria-orientation="vertical"
+         aria-label="Resize columns" aria-valuemin="15" aria-valuemax="85" aria-valuenow="50"
+         title="Drag to resize, double-click for equal widths (arrow keys when focused)" hidden></div>
+    <div class="split-divider div-rows" id="split-row" role="separator" tabindex="0" aria-orientation="horizontal"
+         aria-label="Resize rows" aria-valuemin="15" aria-valuemax="85" aria-valuenow="50"
+         title="Drag to resize, double-click for equal heights (arrow keys when focused)" hidden></div>
+  </main>
+  <script src="/app/recent-filter.js"></script>
+  <script src="/app/session-color.js"></script>
+  <script src="/app/accent.js"></script>
+  <script src="/app/split.js"></script>
+</body>
+</html>
