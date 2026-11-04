@@ -56,7 +56,21 @@ Rename with `cw rename <n|id> <title...>`, or tap the title on the session page.
 
 Split view is a desk feature and is hidden on phones and narrow windows.
 
-![Split view](images/phone-split-view.png)
+Two panes side by side, the left one waiting for permission:
+
+![Split view with two panes in a desktop browser (mock screenshot)](images/desktop-split-two.png)
+
+With three panes the grid is 2x2 and the free cell lists other running sessions. Drag the dividers to resize the columns and rows:
+
+![Split view with three panes and resized dividers (mock screenshot)](images/desktop-split-three.png)
+
+**+ add session...** in the header starts a new session: pick a project or type a path, choose the harness and press **Start session**:
+
+![The add-session popover with the Start form filled in (mock screenshot)](images/desktop-split-add-session.png)
+
+On a phone, a session opens as one full page instead:
+
+![Phone view of a session (mock screenshot)](images/phone-split-view.png)
 
 ## Copy snippets
 

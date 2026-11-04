@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>cw split view (desktop mock)</title>
+<!-- MOCK image source: synthetic data only, not a real capture. Mirrors web/split.html + web/style.css. -->
+<style>
+:root{--bg:#0b0e12;--surface:#12171e;--surface-2:#19202a;--border:#242d39;--text:#d8dee7;--muted:#8591a2;--faint:#5b6676;--accent:#4fd1b0;--accent-ink:#062a22;--attn:#f2b441;--attn-ink:#2b1d00;--danger:#ff6b6b;--mono:"Cascadia Mono",Consolas,Menlo,"DejaVu Sans Mono",monospace;--sans:system-ui,"Segoe UI",Roboto,sans-serif;--radius:8px}
+*{box-sizing:border-box}
+html,body{margin:0;width:1440px;height:900px;overflow:hidden;background:#1b1d22;color:var(--text);font:14px/1.45 var(--sans)}
+body{display:flex;flex-direction:column}
+.tabs{height:38px;flex:none;background:#14161a;display:flex;align-items:flex-end;padding:0 12px;gap:10px}
+.lights{display:flex;gap:8px;align-self:center;margin-right:10px}.lights i{width:12px;height:12px;border-radius:50%;background:#3a3f47;display:block}
+.tab{height:30px;width:220px;background:#2a2d34;border-radius:8px 8px 0 0;display:flex;align-items:center;gap:8px;padding:0 12px;font-size:12px;color:#d6d9de}
+.tab .fav{width:12px;height:12px;border-radius:3px;background:var(--accent)}.tab .x{margin-left:auto;color:#8a8f98}
+.newtab{align-self:center;color:#8a8f98;font-size:16px}
+.addr{height:42px;flex:none;background:#2a2d34;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #0d0e10}
+.addr .nav{color:#9aa0a8;font-size:16px;width:22px;text-align:center}
+.url{flex:1;height:28px;border-radius:14px;background:#1a1c20;display:flex;align-items:center;padding:0 14px;gap:8px;font-size:13px;color:#c9ccd2}
+.url .lock{width:9px;height:11px;border:2px solid #8a8f98;border-radius:3px;display:inline-block}
+.url b{font-weight:400;color:#8a8f98}
+.page{flex:1;min-height:0;background:var(--bg);display:flex;flex-direction:column;position:relative}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:34px;padding:0 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);white-space:nowrap;font:inherit}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.badge{display:inline-block;padding:0 6px;border-radius:999px;font-size:11px;font-weight:600;background:var(--attn);color:var(--attn-ink);white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}.dot.ok{background:var(--accent)}.dot.warn{background:var(--attn)}
+.split-bar{flex:none;display:flex;align-items:center;gap:8px;padding:2px 6px;min-height:32px;background:var(--surface);border-bottom:1px solid var(--border);font:12px var(--mono)}
+.split-bar .back{font:700 16px var(--mono);padding:0 6px}.split-bar .cnt{color:var(--muted)}.split-bar .sp{flex:1}
+.sel{min-height:26px;padding:0 6px;border-radius:6px;border:1px solid var(--border);background:var(--bg);font:12px var(--mono);display:inline-flex;align-items:center;gap:14px}
+.sel:after{content:"\25BE";color:var(--muted)}
+.grid{flex:1;min-height:0;position:relative;display:grid;gap:4px;padding:4px}
+.pane{min-width:0;min-height:0;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);border:1px solid color-mix(in srgb,var(--sc) 45%,var(--border));border-radius:6px}
+.pane.active{border-color:var(--sc)}
+.head{flex:none;display:flex;align-items:center;gap:6px;height:26px;padding:0 2px 0 8px;background:var(--surface);border-bottom:1px solid var(--border);font:12px var(--mono);box-shadow:inset 0 2px 0 var(--sc)}
+.head .t{font-weight:600}.head .i{color:var(--muted)}.head .s{flex:1}
+.head .hb{min-height:22px;padding:0 6px;color:var(--muted);display:inline-flex;align-items:center}
+.term{display:flex;flex-direction:column;justify-content:flex-start;flex:1;min-height:0;background:#0a0d11;font:13px/1.5 var(--mono);padding:8px 12px;white-space:pre-wrap;overflow:hidden;color:var(--text)}
+.u{background:#12302a;color:var(--accent);display:inline-block;width:calc(100% + 8px);padding:0 4px;margin:0 -4px}
+.tl{color:#6aa9ff}.o{color:#7d8aa0}.ok{color:#7ee0a3}.er{color:var(--danger)}.st{color:#d2b48c}.mu{color:var(--muted)}
+.perm{display:block;border:1px solid var(--attn);border-radius:4px;padding:8px 10px;margin:8px 0;color:var(--text)}
+.perm b{color:var(--attn)}
+.inbox{display:block;border:1px solid var(--border);border-radius:4px;padding:3px 8px;margin-top:10px;color:var(--text)}
+.cur{display:inline-block;width:8px;height:15px;background:var(--text);vertical-align:text-bottom;opacity:.8}
+.div{position:absolute;z-index:3}
+.div:after{content:"";position:absolute;background:var(--faint);border-radius:2px}
+.div.c{top:4px;bottom:4px;width:8px}.div.c:after{top:calc(50% - 14px);height:28px;left:3px;width:2px}
+.div.c.lit:before{content:"";position:absolute;top:0;bottom:0;left:3px;width:2px;background:var(--accent);border-radius:2px}
+.div.c.lit:after{background:var(--accent)}
+.div.r{left:4px;right:4px;height:8px}.div.r:after{left:calc(50% - 14px);width:28px;top:3px;height:2px}
+.addcell{padding:12px;gap:8px;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);border:1px solid var(--border);border-radius:6px}
+.addcell h3,.pop h3{margin:0;font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.addcell .item{justify-content:flex-start;font-family:var(--mono);margin-top:4px}
+.fld{width:100%;min-height:38px;padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:space-between}
+.fld.ph{color:var(--muted)}.fld.sel2:after{content:"\25BE";color:var(--muted)}
+.fld.foc{outline:2px solid var(--accent);outline-offset:-1px}
+.pop{position:absolute;z-index:20;top:34px;right:6px;width:360px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 8px 24px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:6px}
+</style></head><body>
+<div class="tabs"><div class="lights"><i></i><i></i><i></i></div><div class="tab"><span class="fav"></span>cw &middot; split<span class="x">&times;</span></div><span class="newtab">+</span></div>
+<div class="addr"><span class="nav">&larr;</span><span class="nav">&rarr;</span><span class="nav">&#8635;</span><div class="url"><span class="lock"></span>https://pc.example.ts.net<b>/split</b></div></div>
+<div class="page"><header class="split-bar"><span class="back">&lsaquo;</span><b>split</b><span class="cnt">3 of 4</span><span class="sp"></span><span class="sel">+ add session&hellip;</span></header><main class="grid" style="grid-template:minmax(0,58fr) minmax(0,42fr)/minmax(0,62fr) minmax(0,38fr)"><section class="pane active" style="--sc:#4fd1b0"><header class="head"><span class="dot warn"></span><span class="t">alpha-api</span><span class="hb" style="padding:0 4px">&#9998;</span><span class="i">#1</span><span class="badge">needs input</span><span class="s"></span><span class="hb">A&minus;</span><span class="hb">A+</span><span class="hb">&nearr;</span><span class="hb">&times;</span></header><div class="term"><div class="in"><div class="in"><span class="u">&gt; Fix the failing unit test in parser.js</span>
+<span class="tl">&#9679; Bash(npm test)</span>
+<span class="er">  &#9145; FAIL test/parser.test.js</span>
+<span class="er">    &#10005; parseDate handles empty string (3 ms)</span>
+<span class="o">    Expected: null   Received: Invalid Date</span>
+<span class="mu">  Tests: 1 failed, 17 passed, 18 total</span>
+<span class="st">&#10043; The empty string is passed straight to new Date(). I'll guard for it.</span>
+<span class="tl">&#9679; Update(src/parser.js)</span>
+<span class="ok">  &#9145; Added 2 lines, removed 1 line</span>
+<span class="perm"><b>Bash command</b>
+
+  npm test
+  Re-run the parser tests
+
+Do you want to proceed?
+<b>&#10095; 1. Yes</b>
+  2. Yes, and don't ask again for npm test commands
+  3. No, and tell Claude what to do differently (esc)</span></div></div></section><section class="pane" style="--sc:#6aa9ff"><header class="head"><span class="dot ok"></span><span class="t">beta-site</span><span class="hb" style="padding:0 4px">&#9998;</span><span class="i">#2</span><span class="s"></span><span class="hb">A&minus;</span><span class="hb">A+</span><span class="hb">&nearr;</span><span class="hb">&times;</span></header><div class="term"><div class="in"><div class="in"><span class="u">&gt; Update the pricing page layout</span>
+<span class="tl">&#9679; Read(pricing.html)</span>
+<span class="o">  &#9145; Read 120 lines</span>
+<span class="tl">&#9679; Read(css/pricing.css)</span>
+<span class="o">  &#9145; Read 76 lines</span>
+<span class="st">&#10043; Moving the three plan cards into a responsive grid.</span>
+<span class="tl">&#9679; Update(css/pricing.css)</span>
+<span class="ok">  &#9145; Added 14 lines, removed 6 lines</span>
+<span class="tl">&#9679; Update(pricing.html)</span>
+<span class="ok">  &#9145; Added 3 lines, removed 3 lines</span>
+<span class="tl">&#9679; Bash(npm run build)</span>
+<span class="o">  &#9145; built in 1.2s, 14 files</span>
+<span class="st">&#10043; Updating the comparison table&hellip; (12s &middot; esc to interrupt)</span></div></div></section><section class="pane" style="--sc:#b58cff"><header class="head"><span class="dot ok"></span><span class="t">gamma-docs</span><span class="hb" style="padding:0 4px">&#9998;</span><span class="i">#3</span><span class="s"></span><span class="hb">A&minus;</span><span class="hb">A+</span><span class="hb">&nearr;</span><span class="hb">&times;</span></header><div class="term"><div class="in"><div class="in"><span class="u">&gt; Add a short install section to README.md</span>
+<span class="tl">&#9679; Update(README.md)</span>
+<span class="ok">  &#9145; Added 18 lines</span>
+<span class="mu">Done. The README now has an Install section covering npm and the
+standalone binary, plus a link to docs/usage.md.</span>
+<span class="inbox"><span class="mu">&gt;</span> <span class="cur"></span></span></div></div></section><section class="addcell"><h3>Add a session</h3><div style="display:flex;flex-direction:column"><span class="btn item">#4 delta-cli</span><span class="btn item">#5 epsilon-worker &middot; needs input</span></div></section><div class="div c lit" style="left:calc((100% - 12px)*.62 + 2px)"></div><div class="div r" style="top:calc((100% - 12px)*.58 + 2px)"></div></main></div>
+</body></html>

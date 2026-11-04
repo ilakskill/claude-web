@@ -9,6 +9,8 @@
 
 The screenshots in these documents are mock-ups with synthetic data.
 
+![Split view with three sessions in a desktop browser (mock screenshot)](docs/images/desktop-split-three.png)
+
 ## What it is
 
 Run `cw` in a project folder. It starts Claude Code inside a small local **hub** and shows that session right in your terminal, just like running `claude` (or in your browser with `cw --web`). The same session can be reached from any device on your tailnet, so your phone can:
