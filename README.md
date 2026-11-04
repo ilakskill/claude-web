@@ -1,5 +1,14 @@
 # claude-web (`cw`)
 
+![Terminal page on a phone, with key bar and compose box (mock screenshot)](docs/images/phone-terminal-keybar.png)
+
+## Documentation
+
+- [INSTALL.md](INSTALL.md): step-by-step install on Windows 11, including Tailscale, ntfy and autostart.
+- [docs/HOWTO.md](docs/HOWTO.md): task-oriented usage guide and quick troubleshooting.
+
+The screenshots in these documents are mock-ups with synthetic data.
+
 ## What it is
 
 Run `cw` in a project folder. It starts Claude Code inside a small local **hub** and shows that session right in your terminal, just like running `claude` (or in your browser with `cw --web`). The same session can be reached from any device on your tailnet, so your phone can:

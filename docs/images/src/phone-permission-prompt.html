@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Permission prompt</title>
+<!-- MOCK image source: synthetic data only, not a real capture. -->
+<style>
+:root{--bg:#0b0e12;--surface:#12171e;--surface-2:#19202a;--border:#242d39;--text:#d8dee7;--muted:#8591a2;--faint:#5b6676;--accent:#4fd1b0;--accent-ink:#062a22;--attn:#f2b441;--attn-ink:#2b1d00;--danger:#ff6b6b;--mono:"Cascadia Mono",Consolas,Menlo,monospace;--sans:system-ui,"Segoe UI",Roboto,sans-serif}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 var(--sans);overflow:hidden}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);white-space:nowrap}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.btn.small{min-height:28px;padding:0 9px;font-size:12px}
+.badge{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:600;background:var(--attn);color:var(--attn-ink)}
+.badge.h{background:transparent;color:var(--muted);border:1px solid var(--border);font-weight:500;font-size:11px;padding:0 7px;margin-left:6px}
+.mono{font-family:var(--mono)}.muted{color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block}
+.logo{font:700 22px/1 var(--mono);letter-spacing:-.5px}.logo span{color:var(--accent)}
+.row{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;padding:12px;border:1px solid var(--border);background:var(--surface);border-radius:8px;margin-bottom:10px}
+.row.attn{border-color:var(--attn);box-shadow:inset 3px 0 0 var(--attn)}
+.row .idx{font:600 16px var(--mono);color:var(--muted)}.row .title{font-weight:600}
+.row .path{font:12px var(--mono);color:var(--muted)}.row .meta{font-size:12px;color:var(--muted);margin-top:2px}
+.row .actions{grid-column:1/-1;display:flex;gap:8px}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:16px 0 8px}
+.topbar{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surface);border-bottom:1px solid var(--border)}
+.topbar .back{font:700 16px var(--mono)}.topbar .title{flex:1;font:700 14px var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .idx{font:12px var(--mono);color:var(--muted)}
+.term{font:12.5px/1.45 var(--mono);padding:8px 10px;white-space:pre-wrap;overflow:hidden;background:#0a0d11}
+.t-user{background:#12302a;color:var(--accent);display:block;padding:0 4px}.t-tool{color:#6aa9ff}.t-out{color:#7d8aa0}.t-ok{color:#7ee0a3}.t-err{color:var(--danger)}.t-warn{color:var(--attn)}.t-st{color:#d2b48c}
+.t-perm{display:block;border:1px solid var(--attn);color:var(--attn);padding:6px 8px;margin:6px 0;border-radius:4px;font-weight:600}
+.keybar{display:flex;flex-wrap:wrap;gap:5px;padding:7px;background:var(--surface);border-top:1px solid var(--border)}
+.keybar .btn{min-height:36px;padding:0 10px;font-size:13px}
+.compose{display:flex;gap:6px;padding:7px;background:var(--surface);border-top:1px solid var(--border)}
+.compose .ta{flex:1;border:1px solid var(--border);border-radius:6px;background:var(--bg);padding:7px 9px;color:var(--faint)}
+.tray{display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--surface-2);border-top:1px solid var(--border)}
+.tray .chip{flex:1;font:12px var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+body{width:390px;height:844px;display:flex;flex-direction:column}.term{flex:1}</style></head><body>
+
+<header class="topbar"><span class="back">&lsaquo;</span><span class="title">alpha-api</span><span class="idx">#1</span><span class="btn small">A&minus;</span><span class="btn small">A+</span><span class="btn small">&#9000;</span><span class="btn small">&#9998;</span></header>
+<div class="term"><span class="t-user">&gt; Fix the failing unit test in parser.js</span>
+<span class="t-st">&#10043; Thinking...</span>
+<span class="t-tool">&#9679; Read(parser.js)</span>
+<span class="t-out">  &#9145; Read 84 lines</span>
+<span class="t-tool">&#9679; Bash(npm test)</span>
+<span class="t-err">  &#9145; 1 failing: parseDate handles empty string</span>
+<span class="t-tool">&#9679; Update(parser.js)</span>
+<span class="t-ok">  &#9145; Added 2 lines, removed 1 line</span>
+
+<span class="t-tool">&#9679; Bash(npm test)</span>
+<span class="t-perm">Allow Bash: npm test? (y/n)
+&#10095; 1. Yes
+  2. Yes, and don't ask again
+  3. No</span></div>
+<div class="compose"><div class="ta">Message (Enter sends)</div><span class="btn primary">Send</span></div>
+<nav class="keybar"><span class="btn">Esc</span><span class="btn">&larr;</span><span class="btn">&uarr;</span><span class="btn">&darr;</span><span class="btn">&rarr;</span><span class="btn">&#9166;</span><span class="btn">&#8679;Tab</span><span class="btn">Tab</span><span class="btn">^C</span><span class="btn">Ctrl</span><span class="btn">PgUp</span><span class="btn">PgDn</span><span class="btn">Copy</span><span class="btn">/</span><span class="btn">Paste</span><span class="btn">&#9998;</span></nav>
+</body></html>
